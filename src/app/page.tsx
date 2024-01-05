@@ -1,8 +1,15 @@
+"use client"
+
+import dynamic from "next/dynamic"
+
+const Map = dynamic(() => import("../components/Map"), {
+  ssr: false,
+});
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        <h1>Hello</h1>
+    <main className="p-8 h-full w-full">
+        <Map />
     </main>
   )
 }
