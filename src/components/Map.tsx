@@ -85,7 +85,7 @@ export default function Map() {
       }
 
     return (
-        <div className="flex flex-col h-full w-full">
+        <div className="flex h-full w-full gap-6">
             <div className="h-12"></div>
             <MapContainer center={defaultPosition} zoom={13} className="relative w-full h-full rounded-2xl border-[#363636] border-2">
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -124,6 +124,24 @@ export default function Map() {
                   </Popup>
                 )}
             </MapContainer>
+
+            <div className="w-1/5 py-4 px-8 rounded-2xl bg-[#262626] shadow-lg border-2 border-[#363636] text-white overflow-y-auto">
+              <h2 className="text-xl mb-4 flex items-center gap-1 justify-center font-bold">
+                <Image src={"setFav.svg"} width={25} height={25} alt="Favorite Icon" className="animate-bounce" /> 
+                Your Favorite Places
+              </h2>
+              <ul>
+                {
+                  favourites.map((id) => {
+                    return places.find((place) => place.id === id);
+                  }).map((place) => (
+                    <li key={place?.id} className="p-4 mb-4 rounded-lg bg-[#454545] shadow-lg font-medium cursor-pointer">
+                      <h3>{place?.properties.name}</h3>
+                    </li>
+                  ))
+                }
+              </ul>
+            </div>
         </div>
     )
 }
