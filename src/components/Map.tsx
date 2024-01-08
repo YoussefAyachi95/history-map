@@ -7,6 +7,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import { Icon } from "leaflet"
 
 import "leaflet/dist/leaflet.css"
+import Image from 'next/image';
 
 
 const defaultPosition: [number, number] = [51.505, -0.09]
@@ -35,6 +36,11 @@ interface Place {
 
 export default function Map() {
     const [places, setPlaces] = useState<Place[]>([]);
+    const [activeEvent, setActiveEvent] = useState<Place | null>(null)
+    const [favourites, setFavourites] = useState<String[]>(() => {
+      const savedFavs = localStorage.getItem('favourites')
+      return savedFavs ? JSON.parse(savedFavs) : []
+    })
 
     const icon: Icon = new Icon({
         iconUrl: "marker.svg",
@@ -67,6 +73,17 @@ export default function Map() {
         fetchPlaces();
       }, []);
 
+      const handleFavs = (eventId: string) => {
+        let updatedFavs = favourites.filter((id) => id !== eventId)
+
+        if (!favourites.includes(eventId)) {
+          updatedFavs = [eventId, ...updatedFavs]
+        }
+
+        setFavourites(updatedFavs)
+        localStorage.setItem("favourites", JSON.stringify(updatedFavs))
+      }
+
     return (
         <div className="flex flex-col h-full w-full">
             <div className="h-12"></div>
@@ -76,14 +93,36 @@ export default function Map() {
                     places && places.length > 0 &&
                     places.map((place) => (
                         place.geometry && place.geometry.coordinates && place.geometry.coordinates.length === 2 && (
-                            <Marker key={place.id} position={[place.geometry.coordinates[1], place.geometry.coordinates[0]]} icon={icon}>
-                                <Popup>{place.properties.name}</Popup>
-                            </Marker>
+                            <Marker key={place.id} position={[place.geometry.coordinates[1], place.geometry.coordinates[0]]} icon={icon} eventHandlers={{
+                              click: () => {
+                                setActiveEvent(place)
+                              }
+                            }} />  
                         )
                     ))
                 }
-
-
+                {activeEvent && (
+                    <Popup position={[activeEvent.geometry.coordinates[1], activeEvent.geometry.coordinates[0]]}>
+                      <div>
+                        <h2 className="text-lg font-bold capitalize flex items-center gap-2 mb-2">
+                          {activeEvent.properties.name}
+                        </h2>
+                        <button onClick={() => handleFavs(activeEvent.id)}>
+                            {
+                              favourites.includes(activeEvent.id) ? 
+                                <span className="flex items-center justify-center gap-1 font-semibold">
+                                  <Image src={"setFav.svg"} width={25} height={25} alt="Favorite Icon" /> 
+                                  Unfavorite
+                                </span>
+                              : <span className="flex items-center justify-center gap-1 font-semibold">
+                                  <Image src={"fav.svg"} width={25} height={25} alt="Favorite Icon" /> 
+                                  Favorite
+                                </span>
+                            }
+                        </button>
+                      </div>
+                  </Popup>
+                )}
             </MapContainer>
         </div>
     )

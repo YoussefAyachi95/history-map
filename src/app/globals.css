@@ -22,3 +22,8 @@ body {
     background-color: var(--body-bg);
     height: 100vh;
 }
+
+.leaflet-popup-content-wrapper {
+    background-color: #1e1e1e !important;
+    color: white !important;
+}
