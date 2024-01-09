@@ -1,7 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import { Icon } from "leaflet"
@@ -11,6 +10,8 @@ import FlyToMarker from '@/utils/FlyToMarker';
 import { Place } from '@/types';
 
 import "leaflet/dist/leaflet.css"
+import Filter from './Filter';
+import useFetchPlaces from '@/hooks/useFetch';
 
 const defaultPosition: [number, number] = [51.505, -0.09]
 
@@ -19,7 +20,7 @@ const API_HOST = process.env.NEXT_PUBLIC_API_HOST
 
 
 export default function Map() {
-    const [places, setPlaces] = useState<Place[]>([]);
+    const { places, categories } = useFetchPlaces(defaultPosition, API_KEY, API_HOST); 
     const [activePlace, setActivePlace] = useState<Place | null>(null)
     const [favourites, setFavourites] = useState<String[]>(() => {
       const savedFavs = localStorage.getItem('favourites')
@@ -32,54 +33,32 @@ export default function Map() {
         iconAnchor: [12,41]
     })
 
-    useEffect(() => {
-        const fetchPlaces = async () => {
-          try {
-            const response = await axios.get('https://opentripmap-places-v1.p.rapidapi.com/en/places/radius', {
-              params: {
-                radius: '500', 
-                lon: defaultPosition[1],
-                lat: defaultPosition[0],
-              },
-              headers: {
-                'X-RapidAPI-Key': API_KEY, 
-                'X-RapidAPI-Host': API_HOST,
-              },
-            });
 
-    
-            setPlaces(response.data.features);
-          } catch (error) {
-            console.error('Error fetching places:', error);
-          }
-        };
-    
-        fetchPlaces();
-      }, []);
+    const handleFavs = (eventId: string) => {
+      let updatedFavs = favourites.filter((id) => id !== eventId)
 
-      const handleFavs = (eventId: string) => {
-        let updatedFavs = favourites.filter((id) => id !== eventId)
-
-        if (!favourites.includes(eventId)) {
+      if (!favourites.includes(eventId)) {
           updatedFavs = [eventId, ...updatedFavs]
-        }
-
-        setFavourites(updatedFavs)
-        localStorage.setItem("favourites", JSON.stringify(updatedFavs))
       }
 
-      const handleListItem = (eventId: string) => {
-        const place = places.find((item) => item.id === eventId)
+      setFavourites(updatedFavs)
+      localStorage.setItem("favourites", JSON.stringify(updatedFavs))
+    }
 
-        if (place){
-          setActivePlace(place)
-        }
+    const handleListItem = (eventId: string) => {
+      const place = places.find((item) => item.id === eventId)
 
+      if (place){
+        setActivePlace(place)
       }
+
+    }
 
     return (
         <div className="flex h-full w-full gap-6">
-            <div className="h-12"></div>
+            <div className="h-12">
+              <Filter categories={categories} />
+            </div>
             <MapContainer center={defaultPosition} zoom={13} className="relative w-full h-full rounded-2xl border-[#363636] border-2">
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 {
