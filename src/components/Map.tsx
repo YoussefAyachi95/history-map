@@ -8,6 +8,7 @@ import { Icon } from "leaflet"
 
 import "leaflet/dist/leaflet.css"
 import Image from 'next/image';
+import FlyToMarker from '@/utils/FlyToMarker';
 
 
 const defaultPosition: [number, number] = [51.505, -0.09]
@@ -36,7 +37,7 @@ interface Place {
 
 export default function Map() {
     const [places, setPlaces] = useState<Place[]>([]);
-    const [activeEvent, setActiveEvent] = useState<Place | null>(null)
+    const [activePlace, setActivePlace] = useState<Place | null>(null)
     const [favourites, setFavourites] = useState<String[]>(() => {
       const savedFavs = localStorage.getItem('favourites')
       return savedFavs ? JSON.parse(savedFavs) : []
@@ -84,6 +85,15 @@ export default function Map() {
         localStorage.setItem("favourites", JSON.stringify(updatedFavs))
       }
 
+      const handleListItem = (eventId: string) => {
+        const place = places.find((item) => item.id === eventId)
+
+        if (place){
+          setActivePlace(place)
+        }
+
+      }
+
     return (
         <div className="flex h-full w-full gap-6">
             <div className="h-12"></div>
@@ -95,21 +105,21 @@ export default function Map() {
                         place.geometry && place.geometry.coordinates && place.geometry.coordinates.length === 2 && (
                             <Marker key={place.id} position={[place.geometry.coordinates[1], place.geometry.coordinates[0]]} icon={icon} eventHandlers={{
                               click: () => {
-                                setActiveEvent(place)
+                                setActivePlace(place)
                               }
                             }} />  
                         )
                     ))
                 }
-                {activeEvent && (
-                    <Popup position={[activeEvent.geometry.coordinates[1], activeEvent.geometry.coordinates[0]]}>
+                {activePlace && (
+                    <Popup position={[activePlace.geometry.coordinates[1], activePlace.geometry.coordinates[0]]}>
                       <div>
                         <h2 className="text-lg font-bold capitalize flex items-center gap-2 mb-2">
-                          {activeEvent.properties.name}
+                          {activePlace.properties.name}
                         </h2>
-                        <button onClick={() => handleFavs(activeEvent.id)}>
+                        <button onClick={() => handleFavs(activePlace.id)}>
                             {
-                              favourites.includes(activeEvent.id) ? 
+                              favourites.includes(activePlace.id) ? 
                                 <span className="flex items-center justify-center gap-1 font-semibold">
                                   <Image src={"setFav.svg"} width={25} height={25} alt="Favorite Icon" /> 
                                   Unfavorite
@@ -123,6 +133,11 @@ export default function Map() {
                       </div>
                   </Popup>
                 )}
+
+                {
+                  activePlace && <FlyToMarker position={[activePlace.geometry.coordinates[1], activePlace.geometry.coordinates[0]]} zoomLevel={15} />
+                }
+                
             </MapContainer>
 
             <div className="w-1/5 py-4 px-8 rounded-2xl bg-[#262626] shadow-lg border-2 border-[#363636] text-white overflow-y-auto">
@@ -135,7 +150,13 @@ export default function Map() {
                   favourites.map((id) => {
                     return places.find((place) => place.id === id);
                   }).map((place) => (
-                    <li key={place?.id} className="p-4 mb-4 rounded-lg bg-[#454545] shadow-lg font-medium cursor-pointer">
+                    <li 
+                      key={place?.id} 
+                      className="p-4 mb-4 rounded-lg bg-[#454545] shadow-lg font-medium cursor-pointer"
+                      onClick={() => {
+                        handleListItem(place?.id as string)
+                      }}
+                      >
                       <h3>{place?.properties.name}</h3>
                     </li>
                   ))
