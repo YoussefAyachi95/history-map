@@ -1,10 +1,8 @@
 import { useEffect } from 'react'
 import { useMap } from 'react-leaflet'
+import { FlyToMarkerProps } from '@/types'
 
-interface FlyToMarkerProps {
-    position: [number, number];
-    zoomLevel?: number;
-}
+
 
 export default function FlyToMarker({ position, zoomLevel }: FlyToMarkerProps) {
     const map = useMap()

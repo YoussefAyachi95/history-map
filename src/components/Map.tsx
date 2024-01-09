@@ -5,35 +5,18 @@ import axios from 'axios';
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import { Icon } from "leaflet"
+import Image from 'next/image';
+
+import FlyToMarker from '@/utils/FlyToMarker';
+import { Place } from '@/types';
 
 import "leaflet/dist/leaflet.css"
-import Image from 'next/image';
-import FlyToMarker from '@/utils/FlyToMarker';
-
 
 const defaultPosition: [number, number] = [51.505, -0.09]
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST
 
-
-interface Place {
-    geometry: {
-        coordinates: [number, number]; 
-        type: string;
-    };
-    id: string;
-    properties: {
-        dist: number;
-        kinds: string;
-        name: string;
-        rate: number;
-        wikidata: string;
-        xid: string;
-        
-    };
-    type: string;
-}
 
 export default function Map() {
     const [places, setPlaces] = useState<Place[]>([]);
@@ -137,7 +120,7 @@ export default function Map() {
                 {
                   activePlace && <FlyToMarker position={[activePlace.geometry.coordinates[1], activePlace.geometry.coordinates[0]]} zoomLevel={15} />
                 }
-                
+
             </MapContainer>
 
             <div className="w-1/5 py-4 px-8 rounded-2xl bg-[#262626] shadow-lg border-2 border-[#363636] text-white overflow-y-auto">
