@@ -8,10 +8,12 @@ import Image from 'next/image';
 
 import FlyToMarker from '@/utils/FlyToMarker';
 import { Place } from '@/types';
+import useFetchPlaces from '@/hooks/useFetch';
+import { formatCategory } from '@/utils/formatCategory';
+
+import Filter from './Filter';
 
 import "leaflet/dist/leaflet.css"
-import Filter from './Filter';
-import useFetchPlaces from '@/hooks/useFetch';
 
 const defaultPosition: [number, number] = [51.505, -0.09]
 
@@ -22,10 +24,12 @@ const API_HOST = process.env.NEXT_PUBLIC_API_HOST
 export default function Map() {
     const { places, categories } = useFetchPlaces(defaultPosition, API_KEY, API_HOST); 
     const [activePlace, setActivePlace] = useState<Place | null>(null)
+    const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [favourites, setFavourites] = useState<String[]>(() => {
       const savedFavs = localStorage.getItem('favourites')
       return savedFavs ? JSON.parse(savedFavs) : []
     })
+
 
     const icon: Icon = new Icon({
         iconUrl: "marker.svg",
@@ -54,16 +58,25 @@ export default function Map() {
 
     }
 
+    const filteredPlaces = selectedCategory
+        ? places.filter(place => {
+            const kinds = place.properties.kinds.split(',').map(category => formatCategory(category.trim()));
+            const selectedFormattedCategory = formatCategory(selectedCategory.toLowerCase());
+
+            return kinds.some(category => category.toLowerCase() === selectedFormattedCategory.toLowerCase());
+        })
+        : places;
+
     return (
         <div className="flex h-full w-full gap-6">
             <div className="h-12">
-              <Filter categories={categories} />
+              <Filter categories={categories} setSelectedCategory={setSelectedCategory} selectedCategory={selectedCategory} />
             </div>
             <MapContainer center={defaultPosition} zoom={13} className="relative w-full h-full rounded-2xl border-[#363636] border-2">
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 {
-                    places && places.length > 0 &&
-                    places.map((place) => (
+                    filteredPlaces && filteredPlaces.length > 0 &&
+                    filteredPlaces.map((place) => (
                         place.geometry && place.geometry.coordinates && place.geometry.coordinates.length === 2 && (
                             <Marker key={place.id} position={[place.geometry.coordinates[1], place.geometry.coordinates[0]]} icon={icon} eventHandlers={{
                               click: () => {

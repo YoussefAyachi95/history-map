@@ -20,3 +20,9 @@ export interface FlyToMarkerProps {
     position: [number, number];
     zoomLevel?: number;
 }
+
+export type FilterProps = {
+    categories: string[];
+    selectedCategory: string;
+    setSelectedCategory: (category: string) => void;
+};

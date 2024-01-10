@@ -1,11 +1,9 @@
-import { useState } from 'react';
+import { FilterProps } from '@/types';
 
-type Props = {
-  categories: string[];
-};
-
-const Filter: React.FC<Props> = ({ categories }) => {
-  const [selectedCategory, setSelectedCategory] = useState('');
+const Filter= ({ categories, setSelectedCategory, selectedCategory } : FilterProps) => {
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCategory(e.target.value);
+  };
 
   return (
     <div>
@@ -14,7 +12,7 @@ const Filter: React.FC<Props> = ({ categories }) => {
           name="categoryFilter"
           id="categoryFilter"
           value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
+          onChange={handleCategoryChange}
         >
           <option value="">All</option>
           {categories.map((category, index) => (
