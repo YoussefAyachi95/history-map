@@ -68,8 +68,8 @@ export default function Map() {
         : places;
 
     return (
-        <div className="flex h-full w-full gap-6">
-            <div className="h-12">
+        <div className="p-6 flex h-full w-full gap-6">
+            <div className="gap-6 w-4/5 h-12">
               <Filter categories={categories} setSelectedCategory={setSelectedCategory} selectedCategory={selectedCategory} />
             </div>
             <MapContainer center={defaultPosition} zoom={13} className="relative w-full h-full rounded-2xl border-[#363636] border-2">
