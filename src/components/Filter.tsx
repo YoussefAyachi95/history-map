@@ -6,10 +6,10 @@ const Filter= ({ categories, setSelectedCategory, selectedCategory } : FilterPro
   };
 
   return (
-    <div className="p-4 h-[80px] flex items-center justify-between bg-[#262626] rounded-xl shadow-lg border-2 border-[#454545]">
+    <div className="p-4 h-[80px] flex items-center justify-between bg-[#363636] rounded-xl shadow-lg border-2 border-[#454545]">
       <div className="relative flex w-[20em] h-[3em] rounded-lg overflow-hidden border-2 border-[#454545] font-semibold">
         <select
-          className="p-2 outline-none appearance-none border-0 flex-1"
+          className="p-2 outline-none appearance-none border-0 flex-1 text-white bg-[#262626] cursor-pointer"
           name="categoryFilter"
           id="categoryFilter"
           value={selectedCategory}

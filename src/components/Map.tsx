@@ -115,7 +115,7 @@ export default function Map() {
 
             </MapContainer>
 
-            <div className="w-1/5 py-4 px-8 rounded-2xl bg-[#262626] shadow-lg border-2 border-[#363636] text-white overflow-y-auto">
+            <div className="w-1/5 py-4 px-8 rounded-2xl bg-[#363636] shadow-lg border-2 border-[#363636] text-white overflow-y-auto">
               <h2 className="text-xl mb-4 flex items-center gap-1 justify-center font-bold">
                 <Image src={"setFav.svg"} width={25} height={25} alt="Favorite Icon" className="animate-bounce" /> 
                 Your Favorite Places
