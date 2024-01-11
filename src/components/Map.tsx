@@ -68,10 +68,11 @@ export default function Map() {
         : places;
 
     return (
-        <div className="p-6 flex h-full w-full gap-6">
-            <div className="gap-6 w-4/5 h-12">
+      <>
+          <div className="w-4/5 ml-6">
               <Filter categories={categories} setSelectedCategory={setSelectedCategory} selectedCategory={selectedCategory} />
-            </div>
+          </div>
+          <div className="p-6 flex h-full w-full gap-6">
             <MapContainer center={defaultPosition} zoom={13} className="relative w-full h-full rounded-2xl border-[#363636] border-2">
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 {
@@ -139,5 +140,6 @@ export default function Map() {
               </ul>
             </div>
         </div>
+        </>
     )
 }
