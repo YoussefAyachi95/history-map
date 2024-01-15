@@ -5,24 +5,26 @@ import { useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import { Icon } from "leaflet"
 import Image from 'next/image';
+import { useAtom } from 'jotai';
 
 import FlyToMarker from '@/utils/FlyToMarker';
 import { Place } from '@/types';
 import useFetchPlaces from '@/hooks/useFetch';
 import { formatCategory } from '@/utils/formatCategory';
+import { mapCenterAtom } from '@/utils/context/stateAtoms';
 
 import Filter from './Filter';
 
 import "leaflet/dist/leaflet.css"
 
-const defaultPosition: [number, number] = [51.505, -0.09]
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY
 const API_HOST = process.env.NEXT_PUBLIC_API_HOST
 
 
 export default function Map() {
-    const { places, categories } = useFetchPlaces(defaultPosition, API_KEY, API_HOST); 
+    const [mapCenter, ] = useAtom(mapCenterAtom);
+    const { places, categories } = useFetchPlaces(mapCenter, API_KEY, API_HOST); 
     const [activePlace, setActivePlace] = useState<Place | null>(null)
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [favourites, setFavourites] = useState<String[]>(() => {
@@ -67,13 +69,14 @@ export default function Map() {
         })
         : places;
 
+
     return (
       <>
           <div className="w-4/5 ml-6">
               <Filter categories={categories} setSelectedCategory={setSelectedCategory} selectedCategory={selectedCategory} />
           </div>
           <div className="p-6 flex h-full w-full gap-6">
-            <MapContainer center={defaultPosition} zoom={13} className="relative w-full h-full rounded-2xl border-[#363636] border-2">
+            <MapContainer center={mapCenter} zoom={13} className="relative w-full h-full rounded-2xl border-[#363636] border-2">
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 {
                     filteredPlaces && filteredPlaces.length > 0 &&

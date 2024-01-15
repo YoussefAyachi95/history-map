@@ -26,3 +26,8 @@ export type FilterProps = {
     selectedCategory: string;
     setSelectedCategory: (category: string) => void;
 };
+
+export interface LocationProps {
+    onClick: () => void;
+    city: string;
+}
