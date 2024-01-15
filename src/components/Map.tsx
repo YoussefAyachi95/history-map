@@ -11,7 +11,7 @@ import FlyToMarker from '@/utils/FlyToMarker';
 import { Place } from '@/types';
 import useFetchPlaces from '@/hooks/useFetch';
 import { formatCategory } from '@/utils/formatCategory';
-import { mapCenterAtom } from '@/utils/context/stateAtoms';
+import { cityAtom, mapCenterAtom } from '@/utils/context/stateAtoms';
 
 import Filter from './Filter';
 
@@ -24,6 +24,7 @@ const API_HOST = process.env.NEXT_PUBLIC_API_HOST
 
 export default function Map() {
     const [mapCenter, ] = useAtom(mapCenterAtom);
+    const [city, ] = useAtom(cityAtom)
     const { places, categories } = useFetchPlaces(mapCenter, API_KEY, API_HOST); 
     const [activePlace, setActivePlace] = useState<Place | null>(null)
     const [selectedCategory, setSelectedCategory] = useState<string>('');
@@ -115,6 +116,10 @@ export default function Map() {
 
                 {
                   activePlace && <FlyToMarker position={[activePlace.geometry.coordinates[1], activePlace.geometry.coordinates[0]]} zoomLevel={15} />
+                }
+
+                {
+                  city && <FlyToMarker position={mapCenter} zoomLevel={15} />
                 }
 
             </MapContainer>

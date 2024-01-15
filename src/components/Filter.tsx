@@ -1,9 +1,8 @@
 import { useAtom } from 'jotai';
 import axios from 'axios';
-import { useState } from 'react';
 
 import { FilterProps } from '@/types';
-import { mapCenterAtom } from '@/utils/context/stateAtoms';
+import { cityAtom, mapCenterAtom } from '@/utils/context/stateAtoms';
 
 import Location from './Location';
 
@@ -11,7 +10,7 @@ const OPENCAGE_API_KEY = process.env.NEXT_PUBLIC_OPENCAGE_API_KEY
 
 const Filter= ({ categories, setSelectedCategory, selectedCategory } : FilterProps) => {
   const [, setMapCenter] = useAtom(mapCenterAtom);
-  const [city, setCity] = useState("")
+  const [city, setCity] = useAtom(cityAtom)
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(e.target.value);
