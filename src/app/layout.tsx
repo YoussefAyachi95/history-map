@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'History Map | Home',
-  description: 'Check the history events near your location',
+  title: 'Places Map | Home',
+  description: 'Check the interesting places near your location',
 }
 
 export default function RootLayout({
