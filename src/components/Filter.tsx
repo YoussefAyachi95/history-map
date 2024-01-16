@@ -5,6 +5,7 @@ import { FilterProps } from '@/types';
 import { cityAtom, mapCenterAtom } from '@/utils/context/stateAtoms';
 
 import Location from './Location';
+import SearchLocation from './SearchLocation';
 
 const OPENCAGE_API_KEY = process.env.NEXT_PUBLIC_OPENCAGE_API_KEY
 
@@ -37,9 +38,26 @@ const Filter= ({ categories, setSelectedCategory, selectedCategory } : FilterPro
     }
   };
 
+  const handleSearch = async (location: string) => {
+    try {
+      const geocodingResponse = await axios.get(
+        `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(
+          location
+        )}&key=${OPENCAGE_API_KEY}`
+      );
+
+      const { lat, lng } = geocodingResponse.data.results[0].geometry;
+
+      setMapCenter([lat, lng]);
+    } catch (error) {
+      console.error('Error during geocoding:', error);
+    }
+  };
+
   return (
     <div className="p-4 h-[80px] flex items-center justify-between bg-[#363636] rounded-xl shadow-lg border-2 border-[#454545]">
       <Location onClick={handleCenterMapOnMyLocation} city={city} />
+      <SearchLocation onSearch={handleSearch} />
       <div className="relative flex w-[20em] h-[3em] rounded-lg overflow-hidden border-2 border-[#454545] font-semibold">
         <select
           className="p-2 outline-none appearance-none border-0 flex-1 text-white bg-[#262626] cursor-pointer"
