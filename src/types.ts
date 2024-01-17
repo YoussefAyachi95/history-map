@@ -31,3 +31,7 @@ export interface LocationProps {
     onClick: () => void;
     city: string;
 }
+
+export interface SearchLocationProps {
+    onSearch: (location: string) => void;
+}

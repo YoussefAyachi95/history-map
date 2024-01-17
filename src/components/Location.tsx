@@ -6,7 +6,7 @@ export default function Location({ onClick, city }: LocationProps) {
     
   return (
     <button
-      className="p-2 rounded-md cursor-pointer flex items-center justify-center gap-2 text-white font-semibold"
+      className="p-2 rounded-md cursor-pointer flex items-center justify-center gap-2 text-white font-semibold capitalize"
       onClick={onClick}
     >
         {city ? city : "London"}

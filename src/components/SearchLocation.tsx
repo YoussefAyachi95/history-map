@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
 import { useAtom } from 'jotai';
-import { cityAtom } from '@/utils/context/stateAtoms';
 
-interface SearchLocationProps {
-    onSearch: (location: string) => void;
-}
+import { cityAtom } from '@/utils/context/stateAtoms';
+import { SearchLocationProps } from '@/types';
 
 export default function SearchLocation({ onSearch }: SearchLocationProps) {
     const [searchTerm, setSearchTerm] = useState('');
