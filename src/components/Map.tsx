@@ -73,10 +73,10 @@ export default function Map() {
 
     return (
       <>
-          <div className="w-4/5 ml-6">
+          <div className="w-full sm:w-4/5 sm:ml-6">
               <Filter categories={categories} setSelectedCategory={setSelectedCategory} selectedCategory={selectedCategory} />
           </div>
-          <div className="p-6 flex h-full w-full gap-6">
+          <div className="p-6 flex flex-col sm:flex-row h-full w-full gap-6">
             <MapContainer center={mapCenter} zoom={13} className="relative w-full h-full rounded-2xl border-[#363636] border-2">
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 {
@@ -124,8 +124,8 @@ export default function Map() {
 
             </MapContainer>
 
-            <div className="w-1/5 py-4 px-8 rounded-2xl bg-[#363636] shadow-lg border-2 border-[#363636] text-white overflow-y-auto">
-              <h2 className="text-xl mb-4 flex items-center gap-1 justify-center font-bold">
+            <div className="w-full sm:w-1/5 py-4 rounded-2xl px-8 bg-[#363636] shadow-lg border-2 border-[#363636] text-white overflow-y-auto">
+              <h2 className="text-md lg:text-xl mb-4 flex items-center gap-1 justify-center font-bold">
                 <Image src={"setFav.svg"} width={25} height={25} alt="Favorite Icon" className="animate-bounce" /> 
                 Your Favorite Places
               </h2>

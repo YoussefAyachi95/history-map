@@ -25,7 +25,7 @@ export default function SearchLocation({ onSearch }: SearchLocationProps) {
     };
 
     return (
-        <div className="flex items-center">
+        <div className="flex items-center md:ml-4">
             <input
                 type="text"
                 placeholder="Enter location..."
