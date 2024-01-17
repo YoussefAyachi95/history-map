@@ -14,6 +14,7 @@ import { formatCategory } from '@/utils/formatCategory';
 import { cityAtom, mapCenterAtom } from '@/utils/context/stateAtoms';
 
 import Filter from './Filter';
+import { FavoritePlaces } from './FavoritePlaces';
 
 import "leaflet/dist/leaflet.css"
 
@@ -28,8 +29,8 @@ export default function Map() {
     const { places, categories } = useFetchPlaces(mapCenter, API_KEY, API_HOST); 
     const [activePlace, setActivePlace] = useState<Place | null>(null)
     const [selectedCategory, setSelectedCategory] = useState<string>('');
-    const [favourites, setFavourites] = useState<String[]>(() => {
-      const savedFavs = localStorage.getItem('favourites')
+    const [favorites, setFavorites] = useState<String[]>(() => {
+      const savedFavs = localStorage.getItem('favorites')
       return savedFavs ? JSON.parse(savedFavs) : []
     })
 
@@ -42,14 +43,14 @@ export default function Map() {
 
 
     const handleFavs = (eventId: string) => {
-      let updatedFavs = favourites.filter((id) => id !== eventId)
+      let updatedFavs = favorites.filter((id) => id !== eventId)
 
-      if (!favourites.includes(eventId)) {
+      if (!favorites.includes(eventId)) {
           updatedFavs = [eventId, ...updatedFavs]
       }
 
-      setFavourites(updatedFavs)
-      localStorage.setItem("favourites", JSON.stringify(updatedFavs))
+      setFavorites(updatedFavs)
+      localStorage.setItem("favorites", JSON.stringify(updatedFavs))
     }
 
     const handleListItem = (eventId: string) => {
@@ -99,7 +100,7 @@ export default function Map() {
                         </h2>
                         <button onClick={() => handleFavs(activePlace.id)}>
                             {
-                              favourites.includes(activePlace.id) ? 
+                              favorites.includes(activePlace.id) ? 
                                 <span className="flex items-center justify-center gap-1 font-semibold">
                                   <Image src={"setFav.svg"} width={25} height={25} alt="Favorite Icon" /> 
                                   Unfavorite
@@ -124,29 +125,7 @@ export default function Map() {
 
             </MapContainer>
 
-            <div className="w-full sm:w-1/5 py-4 rounded-2xl px-8 bg-[#363636] shadow-lg border-2 border-[#363636] text-white overflow-y-auto">
-              <h2 className="text-md lg:text-xl mb-4 flex items-center gap-1 justify-center font-bold">
-                <Image src={"setFav.svg"} width={25} height={25} alt="Favorite Icon" className="animate-bounce" /> 
-                Your Favorite Places
-              </h2>
-              <ul>
-                {
-                  favourites.map((id) => {
-                    return places.find((place) => place.id === id);
-                  }).map((place) => (
-                    <li 
-                      key={place?.id} 
-                      className="p-4 mb-4 rounded-lg bg-[#454545] shadow-lg font-medium cursor-pointer"
-                      onClick={() => {
-                        handleListItem(place?.id as string)
-                      }}
-                      >
-                      <h3>{place?.properties.name}</h3>
-                    </li>
-                  ))
-                }
-              </ul>
-            </div>
+            <FavoritePlaces favorites={favorites} handleListItem={handleListItem} places={places} />
         </div>
         </>
     )

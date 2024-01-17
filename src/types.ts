@@ -35,3 +35,9 @@ export interface LocationProps {
 export interface SearchLocationProps {
     onSearch: (location: string) => void;
 }
+
+export interface FavoritePlacesProps {
+    favorites: String[];
+    places: Place[];
+    handleListItem: (eventId: string) => void;
+}
