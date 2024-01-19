@@ -56,8 +56,10 @@ export default function Map() {
     const handleListItem = (eventId: string) => {
       const place = places.find((item) => item.id === eventId)
 
-      if (place){
-        setActivePlace(place)
+      if (place) {
+        setActivePlace(place);
+      } else {
+        console.error("Place not found for ID:", eventId);
       }
 
     }

@@ -13,21 +13,21 @@ export const FavoritePlaces = ({ favorites, handleListItem, places }: FavoritePl
                     Your Favorite Places
                 </h2>
                 <ul>
-                    {
-                    favorites.map((id) => {
-                        return places.find((place: Place) => place.id === id);
-                    }).map((place) => (
-                        <li 
+                {favorites.map((id) => {
+                    const place = places.find((place: Place) => place.id === id);
+                    return place && (
+                        <li
                             key={place?.id} 
                             className="p-4 mb-4 rounded-lg bg-[#454545] shadow-lg font-medium cursor-pointer"
                             onClick={() => {
                                 handleListItem(place?.id as string)
-                            }}>
-                            <h3>{place?.properties.name}</h3>
+                        }}>
+                            <h3>{place.properties.name}</h3>
                         </li>
-                    ))
-                    }
+                    );
+                })}
                 </ul>
         </div>
     )
 }
+
