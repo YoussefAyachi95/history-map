@@ -18,13 +18,12 @@ export const FavoritePlaces = ({ favorites, handleListItem, places }: FavoritePl
                         return places.find((place: Place) => place.id === id);
                     }).map((place) => (
                         <li 
-                        key={place?.id} 
-                        className="p-4 mb-4 rounded-lg bg-[#454545] shadow-lg font-medium cursor-pointer"
-                        onClick={() => {
-                            handleListItem(place?.id as string)
-                        }}
-                        >
-                        <h3>{place?.properties.name}</h3>
+                            key={place?.id} 
+                            className="p-4 mb-4 rounded-lg bg-[#454545] shadow-lg font-medium cursor-pointer"
+                            onClick={() => {
+                                handleListItem(place?.id as string)
+                            }}>
+                            <h3>{place?.properties.name}</h3>
                         </li>
                     ))
                     }
