@@ -29,10 +29,7 @@ export default function Map() {
     const { places, categories } = useFetchPlaces(mapCenter, API_KEY, API_HOST); 
     const [activePlace, setActivePlace] = useState<Place | null>(null)
     const [selectedCategory, setSelectedCategory] = useState<string>('');
-    const [favorites, setFavorites] = useState<String[]>(() => {
-      const savedFavs = localStorage.getItem('favorites')
-      return savedFavs ? JSON.parse(savedFavs) : []
-    })
+    const [favorites, setFavorites] = useState<String[] | undefined>();
 
 
     const icon: Icon = new Icon({
@@ -43,15 +40,15 @@ export default function Map() {
 
 
     const handleFavs = (eventId: string) => {
-      let updatedFavs = favorites.filter((id) => id !== eventId)
-
-      if (!favorites.includes(eventId)) {
-          updatedFavs = [eventId, ...updatedFavs]
+      const updatedFavs = favorites ? favorites.filter((id) => id !== eventId) : [];
+    
+      if (!favorites || !favorites.includes(eventId)) {
+        updatedFavs.unshift(eventId);
       }
-
-      setFavorites(updatedFavs)
-      localStorage.setItem("favorites", JSON.stringify(updatedFavs))
-    }
+    
+      setFavorites(updatedFavs);
+      localStorage.setItem("favorites", JSON.stringify(updatedFavs));
+    };
 
     const handleListItem = (eventId: string) => {
       const place = places.find((item) => item.id === eventId)
@@ -105,7 +102,7 @@ export default function Map() {
                         </h2>
                         <button onClick={() => handleFavs(activePlace.id)}>
                             {
-                              favorites.includes(activePlace.id) ? 
+                              favorites?.includes(activePlace.id) ? 
                                 <span className="flex items-center justify-center gap-1 font-semibold">
                                   <Image src={"setFav.svg"} width={25} height={25} alt="Favorite Icon" /> 
                                   Unfavorite

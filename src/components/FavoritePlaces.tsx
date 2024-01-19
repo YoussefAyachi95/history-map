@@ -13,7 +13,7 @@ export const FavoritePlaces = ({ favorites, handleListItem, places }: FavoritePl
                     Your Favorite Places
                 </h2>
                 <ul>
-                {favorites.map((id) => {
+                {favorites?.map((id) => {
                     const place = places.find((place: Place) => place.id === id);
                     return place && (
                         <li

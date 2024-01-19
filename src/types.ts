@@ -37,7 +37,7 @@ export interface SearchLocationProps {
 }
 
 export interface FavoritePlacesProps {
-    favorites: String[];
+    favorites?: String[];
     places: Place[];
     handleListItem: (eventId: string) => void;
 }
