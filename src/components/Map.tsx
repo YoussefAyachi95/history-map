@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import { Icon } from "leaflet"
@@ -68,8 +68,11 @@ export default function Map() {
             const selectedFormattedCategory = formatCategory(selectedCategory.toLowerCase());
 
             return kinds.some(category => category.toLowerCase() === selectedFormattedCategory.toLowerCase());
-        })
-        : places;
+        }) : places;
+
+    useEffect(() => {
+      setActivePlace(null);
+    }, [city]);    
 
 
     return (
